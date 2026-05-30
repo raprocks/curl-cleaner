@@ -23,27 +23,34 @@ Output is in `build/`.
 
 This project uses **adapter-static** (output in `build/`), not the SvelteKit Cloudflare Workers adapter.
 
-### Git integration (dashboard)
+**Live site:** https://curl-cleaner.pages.dev
+
+### Git integration (automatic)
+
+Connected to **raprocks/curl-cleaner** on Cloudflare Pages. Pushes to `main` trigger production deploys; PRs get preview deployments.
+
+Build settings (also in `wrangler.jsonc` as source of truth for output dir):
 
 | Setting | Value |
 |--------|--------|
-| Framework preset | **None** (do not use the SvelteKit preset) |
-| Build command | `npm run build` |
+| Build command | `npm ci && npm run build` |
 | Build output directory | `build` |
-| Environment variable | `NODE_VERSION` = `22` |
+| `NODE_VERSION` | `22` |
 
-The SvelteKit preset points at `.svelte-kit/cloudflare` and will fail for this repo.
+Do **not** use the SvelteKit framework preset — it points at `.svelte-kit/cloudflare` and will fail.
 
 ### Wrangler CLI
 
 ```bash
 npm install
 npx wrangler login          # once
-npm run cf:deploy           # build + deploy to Pages
+npm run cf:deploy           # manual build + deploy (direct upload)
 npm run cf:preview          # local preview of the built site
 ```
 
 `wrangler.jsonc` sets `pages_build_output_dir` to `build`.
+
+> **Note:** Projects created with `wrangler pages deploy` only cannot add Git later. This repo uses a Git-connected Pages project created via the API.
 
 ## Settings
 
