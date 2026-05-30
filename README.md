@@ -21,13 +21,29 @@ Output is in `build/`.
 
 ## Deploy to Cloudflare Pages
 
+This project uses **adapter-static** (output in `build/`), not the SvelteKit Cloudflare Workers adapter.
+
+### Git integration (dashboard)
+
 | Setting | Value |
 |--------|--------|
-| Framework preset | None (or SvelteKit if offered) |
+| Framework preset | **None** (do not use the SvelteKit preset) |
 | Build command | `npm run build` |
 | Build output directory | `build` |
+| Environment variable | `NODE_VERSION` = `22` |
 
-No Workers or server adapter required — this is static HTML/JS only.
+The SvelteKit preset points at `.svelte-kit/cloudflare` and will fail for this repo.
+
+### Wrangler CLI
+
+```bash
+npm install
+npx wrangler login          # once
+npm run cf:deploy           # build + deploy to Pages
+npm run cf:preview          # local preview of the built site
+```
+
+`wrangler.jsonc` sets `pages_build_output_dir` to `build`.
 
 ## Settings
 

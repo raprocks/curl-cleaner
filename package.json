@@ -9,7 +9,13 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"cf:check": "wrangler check",
+		"cf:deploy": "npm run build && wrangler pages deploy build --project-name=curl-cleaner",
+		"cf:preview": "npm run build && wrangler pages dev build"
+	},
+	"engines": {
+		"node": ">=20"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^3.0.10",
@@ -19,6 +25,7 @@
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
 		"typescript": "^6.0.2",
-		"vite": "^8.0.7"
+		"vite": "^8.0.7",
+		"wrangler": "^4.24.0"
 	}
 }
