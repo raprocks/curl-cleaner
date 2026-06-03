@@ -119,10 +119,14 @@ export function tokenizeCurl(input: string): string[] {
 			i++;
 			let value = '';
 			while (i < input.length) {
-				if (input[i] === '\\' && i + 1 < input.length) {
-					value += input[++i];
-					i++;
-					continue;
+				// Single-quoted curl args are literal; double quotes only escape $ ` " \.
+				if (quote === '"' && input[i] === '\\' && i + 1 < input.length) {
+					const next = input[i + 1];
+					if (next === '"' || next === '\\' || next === '$' || next === '`') {
+						value += next;
+						i += 2;
+						continue;
+					}
 				}
 				if (input[i] === quote) {
 					i++;
