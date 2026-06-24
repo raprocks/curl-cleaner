@@ -41,7 +41,7 @@ Do **not** use the SvelteKit framework preset — it points at `.svelte-kit/clou
 
 ### Environment variables
 
-Set these in Cloudflare Pages (Settings → Environment variables) and locally in `.env` (see `.env.example`):
+Set these in Cloudflare Pages (Settings → Environment variables) for **Production** and ensure they apply to **Builds** (not runtime only). Values are also in `.env.production` so builds succeed without dashboard config.
 
 | Variable | Purpose |
 |----------|---------|
