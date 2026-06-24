@@ -7,14 +7,14 @@ Built with SvelteKit as a **fully static** site for [Cloudflare Pages](https://d
 ## Develop
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ## Build
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Output is in `build/`.
@@ -23,7 +23,7 @@ Output is in `build/`.
 
 This project uses **adapter-static** (output in `build/`), not the SvelteKit Cloudflare Workers adapter.
 
-**Live site:** https://curl-cleaner.pages.dev
+**Live site:** https://curl-cleaner.rohitpatil.me
 
 ### Git integration (automatic)
 
@@ -33,19 +33,30 @@ Build settings (also in `wrangler.jsonc` as source of truth for output dir):
 
 | Setting | Value |
 |--------|--------|
-| Build command | `npm ci && npm run build` |
+| Build command | `pnpm install --frozen-lockfile && pnpm run build` |
 | Build output directory | `build` |
 | `NODE_VERSION` | `22` |
 
 Do **not** use the SvelteKit framework preset — it points at `.svelte-kit/cloudflare` and will fail.
 
+### Environment variables
+
+Set these in Cloudflare Pages (Settings → Environment variables) and locally in `.env` (see `.env.example`):
+
+| Variable | Purpose |
+|----------|---------|
+| `PUBLIC_SITE_URL` | Canonical URL for SEO, sitemap, and Open Graph (default: `https://curl-cleaner.rohitpatil.me`) |
+| `PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (e.g. `G-XXXXXXXXXX`) |
+
+After deploy, submit `https://curl-cleaner.rohitpatil.me/sitemap.xml` in [Google Search Console](https://search.google.com/search-console).
+
 ### Wrangler CLI
 
 ```bash
-npm install
-npx wrangler login          # once
-npm run cf:deploy           # manual build + deploy (direct upload)
-npm run cf:preview          # local preview of the built site
+pnpm install
+pnpm exec wrangler login    # once
+pnpm run cf:deploy          # manual build + deploy (direct upload)
+pnpm run cf:preview         # local preview of the built site
 ```
 
 `wrangler.jsonc` sets `pages_build_output_dir` to `build`.

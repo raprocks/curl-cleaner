@@ -5,6 +5,8 @@
 	import { validateCurl } from '$lib/curl-validator';
 	import { estimateTokens } from '$lib/estimate-tokens';
 	import SettingsDialog from '$lib/components/SettingsDialog.svelte';
+	import SeoHead from '$lib/components/SeoHead.svelte';
+	import { faq } from '$lib/seo/faq';
 	import { loadConfig, saveConfig, type CleanerConfig } from '$lib/settings';
 	import { getResolvedTheme, toggleTheme } from '$lib/theme';
 
@@ -53,13 +55,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Curl Cleaner</title>
-	<meta
-		name="description"
-		content="Strip browser noise from DevTools curl commands — keep only the headers that matter."
-	/>
-</svelte:head>
+<SeoHead />
 
 <main>
 	<header>
@@ -214,6 +210,44 @@
 			{/if}
 		</footer>
 	{/if}
+
+	<section class="seo-content" aria-labelledby="how-it-works">
+		<h2 id="how-it-works">How to clean a curl command from Chrome DevTools</h2>
+		<ol>
+			<li>Open Chrome DevTools → Network, right-click a request, and choose <strong>Copy → Copy as cURL (bash)</strong>.</li>
+			<li>Paste the command into the <strong>Raw curl</strong> panel above.</li>
+			<li>Copy the cleaned curl from the right — ready to share, replay, or paste into an agent.</li>
+		</ol>
+
+		<div class="seo-grid">
+			<div>
+				<h3>Headers removed by default</h3>
+				<p>
+					Accept, Accept-Language, Origin, Referer, User-Agent, sec-ch-ua*, Sec-Fetch-*,
+					and most custom X-* headers.
+				</p>
+			</div>
+			<div>
+				<h3>What stays</h3>
+				<p>
+					URL, method, Authorization, Cookie, Content-Type, other useful headers,
+					request body, and auth or upload flags.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="faq" aria-labelledby="faq">
+		<h2 id="faq">Frequently asked questions</h2>
+		<dl>
+			{#each faq as item (item.question)}
+				<div class="faq-item">
+					<dt>{item.question}</dt>
+					<dd>{item.answer}</dd>
+				</div>
+			{/each}
+		</dl>
+	</section>
 </main>
 
 <SettingsDialog
@@ -499,6 +533,82 @@
 
 	.highlight {
 		color: var(--accent);
+	}
+
+	.seo-content,
+	.faq {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--border);
+		font-family: system-ui, -apple-system, sans-serif;
+	}
+
+	.seo-content h2,
+	.faq h2 {
+		margin: 0 0 1rem;
+		font-size: 1.125rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	.seo-content ol {
+		margin: 0 0 1.5rem;
+		padding-left: 1.25rem;
+		color: var(--text);
+		font-size: 0.9375rem;
+		line-height: 1.6;
+	}
+
+	.seo-content li + li {
+		margin-top: 0.5rem;
+	}
+
+	.seo-grid {
+		display: grid;
+		gap: 1rem;
+	}
+
+	@media (min-width: 640px) {
+		.seo-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.seo-grid h3 {
+		margin: 0 0 0.35rem;
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+
+	.seo-grid p {
+		margin: 0;
+		font-size: 0.875rem;
+		line-height: 1.55;
+		color: var(--muted);
+	}
+
+	.faq dl {
+		margin: 0;
+	}
+
+	.faq-item + .faq-item {
+		margin-top: 1.25rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.faq dt {
+		margin: 0 0 0.35rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.faq dd {
+		margin: 0;
+		font-size: 0.875rem;
+		line-height: 1.55;
+		color: var(--muted);
 	}
 
 	.explainer {

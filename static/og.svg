@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Curl Cleaner">
+	<rect width="1200" height="630" fill="#166b2b"/>
+	<rect width="1200" height="630" fill="url(#shine)" opacity="0.2"/>
+	<defs>
+		<linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0%" stop-color="#fff"/>
+			<stop offset="50%" stop-color="#fff" stop-opacity="0"/>
+		</linearGradient>
+	</defs>
+	<text
+		x="80"
+		y="220"
+		fill="#fff"
+		font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+		font-size="72"
+		font-weight="700"
+	>Curl Cleaner</text>
+	<text
+		x="80"
+		y="310"
+		fill="#d1fae0"
+		font-family="system-ui, -apple-system, sans-serif"
+		font-size="36"
+	>Strip browser headers from DevTools curl commands</text>
+	<rect x="80" y="380" width="420" height="10" rx="5" fill="#fff" opacity="0.22"/>
+	<rect x="80" y="410" width="320" height="10" rx="5" fill="#fff" opacity="0.22"/>
+	<rect x="80" y="440" width="480" height="10" rx="5" fill="#fff"/>
+	<rect x="80" y="470" width="360" height="10" rx="5" fill="#fff"/>
+</svg>

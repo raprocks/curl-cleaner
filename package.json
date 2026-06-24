@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
+	"packageManager": "pnpm@10.33.0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -11,8 +12,9 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"cf:check": "wrangler check",
-		"cf:deploy": "npm run build && wrangler pages deploy build --project-name=curl-cleaner",
-		"cf:preview": "npm run build && wrangler pages dev build"
+		"cf:deploy": "pnpm run build && wrangler pages deploy build --project-name=curl-cleaner",
+		"cf:preview": "pnpm run build && wrangler pages dev build",
+		"check:seo": "test -f build/sitemap.xml && test -f build/robots.txt"
 	},
 	"engines": {
 		"node": ">=20"
