@@ -6,6 +6,8 @@
 
 <svelte:head>
 	{#if id}
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous" />
 		<script async src="https://www.googletagmanager.com/gtag/js?id={id}"></script>
 		{@html `<script>
 			window.dataLayer = window.dataLayer || [];

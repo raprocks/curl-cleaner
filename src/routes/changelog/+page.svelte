@@ -3,7 +3,11 @@
 	import { changelog, version } from '$lib/changelog';
 </script>
 
-<SeoHead path="/changelog" />
+<SeoHead
+	path="/changelog"
+	title="Changelog — Curl Cleaner"
+	description="Release history for Curl Cleaner: curl header stripping, validation, converters, and SEO improvements."
+/>
 
 <main>
 	<nav>

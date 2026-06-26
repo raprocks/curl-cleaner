@@ -11,6 +11,16 @@ export type Release = {
 // ponytail: hand-maintained; add a block when you bump package.json
 export const changelog: Release[] = [
 	{
+		version: '0.2.0',
+		date: '2026-06-26',
+		changes: [
+			'SEO landing pages: copy-as-curl guide, LLM token guide, remove-headers guide',
+			'curl to fetch and curl to Python converters',
+			'Per-page meta tags, HowTo/Breadcrumb/Organization schema, raster OG image',
+			'Site footer with internal links; sitemap lastmod for all routes'
+		]
+	},
+	{
 		version: '0.1.0',
 		date: '2026-06-26',
 		changes: [

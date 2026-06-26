@@ -1,65 +1,70 @@
 <script lang="ts">
 	import { site } from '$lib/site';
 	import { faq } from '$lib/seo/faq';
+	import {
+		breadcrumbSchema,
+		faqPageSchema,
+		organizationSchema,
+		webApplicationSchema
+	} from '$lib/seo/schema';
 
 	type Props = {
 		path?: string;
+		title?: string;
+		description?: string;
+		jsonLd?: object[];
+		includeFaq?: boolean;
+		includeWebApp?: boolean;
+		includeOrganization?: boolean;
+		ogImage?: string;
 	};
 
-	let { path = '/' }: Props = $props();
+	let {
+		path = '/',
+		title = site.title,
+		description = site.description,
+		jsonLd = [],
+		includeFaq = false,
+		includeWebApp = false,
+		includeOrganization = false,
+		ogImage = `${site.url}/og.png`
+	}: Props = $props();
 
 	const canonical = $derived(new URL(path, site.url).href);
-	const ogImage = `${site.url}/og.svg`;
 
-	const jsonLd = $derived(
-		JSON.stringify([
-		{
-			'@context': 'https://schema.org',
-			'@type': 'WebApplication',
-			name: site.name,
-			url: site.url,
-			description: site.description,
-			applicationCategory: 'DeveloperApplication',
-			operatingSystem: 'Any',
-			offers: {
-				'@type': 'Offer',
-				price: '0',
-				priceCurrency: 'USD'
-			},
-			browserRequirements: 'Requires JavaScript'
-		},
-		{
-			'@context': 'https://schema.org',
-			'@type': 'FAQPage',
-			mainEntity: faq.map((item) => ({
-				'@type': 'Question',
-				name: item.question,
-				acceptedAnswer: {
-					'@type': 'Answer',
-					text: item.answer
-				}
-			}))
-		}
-		])
+	const structuredData = $derived(
+		[
+			...(includeWebApp ? [webApplicationSchema()] : []),
+			...(includeOrganization ? [organizationSchema()] : []),
+			...(includeFaq ? [faqPageSchema(faq)] : []),
+			...jsonLd
+		]
 	);
+	const hasStructuredData = $derived(structuredData.length > 0);
+	const structuredDataJson = $derived(JSON.stringify(structuredData));
 </script>
 
 <svelte:head>
-	<title>{site.title}</title>
-	<meta name="description" content={site.description} />
+	<title>{title}</title>
+	<meta name="description" content={description} />
 	<link rel="canonical" href={canonical} />
+	<meta name="theme-color" content="#166b2b" />
 
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={canonical} />
-	<meta property="og:title" content={site.title} />
-	<meta property="og:description" content={site.description} />
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
 	<meta property="og:site_name" content={site.name} />
 	<meta property="og:image" content={ogImage} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 
-	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content={site.title} />
-	<meta name="twitter:description" content={site.description} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={description} />
 	<meta name="twitter:image" content={ogImage} />
 
-	{@html `<script type="application/ld+json">${jsonLd}</script>`}
+	{#if hasStructuredData}
+		{@html `<script type="application/ld+json">${structuredDataJson}</script>`}
+	{/if}
 </svelte:head>
