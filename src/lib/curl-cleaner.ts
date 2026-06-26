@@ -105,7 +105,115 @@ export function normalizeCurl(input: string): string {
 		.trim();
 }
 
-/** Tokenize a curl command respecting single- and double-quoted segments. */
+/** Decode bash $'...' ANSI-C escape sequences (DevTools often uses this for JSON bodies). */
+function decodeAnsiCEscapes(input: string): string {
+	let out = '';
+	let i = 0;
+
+	while (i < input.length) {
+		if (input[i] !== '\\') {
+			out += input[i++];
+			continue;
+		}
+
+		i++;
+		if (i >= input.length) {
+			out += '\\';
+			break;
+		}
+
+		const c = input[i++];
+		switch (c) {
+			case 'a':
+				out += '\x07';
+				break;
+			case 'b':
+				out += '\b';
+				break;
+			case 'e':
+				out += '\x1b';
+				break;
+			case 'f':
+				out += '\f';
+				break;
+			case 'n':
+				out += '\n';
+				break;
+			case 'r':
+				out += '\r';
+				break;
+			case 't':
+				out += '\t';
+				break;
+			case 'v':
+				out += '\v';
+				break;
+			case '\\':
+				out += '\\';
+				break;
+			case "'":
+				out += "'";
+				break;
+			case '"':
+				out += '"';
+				break;
+			case '?':
+				out += '?';
+				break;
+			case 'x': {
+				const hex = input.slice(i, i + 2);
+				if (/^[0-9A-Fa-f]{1,2}$/.test(hex)) {
+					out += String.fromCharCode(parseInt(hex.padEnd(2, '0'), 16));
+					i += hex.length;
+				} else {
+					out += 'x';
+				}
+				break;
+			}
+			case 'u': {
+				const hex = input.slice(i, i + 4);
+				if (/^[0-9A-Fa-f]{4}$/.test(hex)) {
+					out += String.fromCodePoint(parseInt(hex, 16));
+					i += 4;
+				} else {
+					out += 'u';
+				}
+				break;
+			}
+			case 'U': {
+				const hex = input.slice(i, i + 8);
+				if (/^[0-9A-Fa-f]{8}$/.test(hex)) {
+					out += String.fromCodePoint(parseInt(hex, 16));
+					i += 8;
+				} else {
+					out += 'U';
+				}
+				break;
+			}
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7': {
+				let oct = c;
+				while (oct.length < 3 && i < input.length && /[0-7]/.test(input[i])) {
+					oct += input[i++];
+				}
+				out += String.fromCharCode(parseInt(oct, 8) & 0xff);
+				break;
+			}
+			default:
+				out += c;
+		}
+	}
+
+	return out;
+}
+
+/** Tokenize a curl command respecting single-, double-, and $'...' quoted segments. */
 export function tokenizeCurl(input: string): string[] {
 	const tokens: string[] = [];
 	let i = 0;
@@ -113,6 +221,25 @@ export function tokenizeCurl(input: string): string[] {
 	while (i < input.length) {
 		while (i < input.length && /\s/.test(input[i])) i++;
 		if (i >= input.length) break;
+
+		if (
+			input[i] === '$' &&
+			i + 1 < input.length &&
+			(input[i + 1] === "'" || input[i + 1] === '"')
+		) {
+			const quote = input[i + 1];
+			i += 2;
+			let raw = '';
+			while (i < input.length) {
+				if (input[i] === quote) {
+					i++;
+					break;
+				}
+				raw += input[i++];
+			}
+			tokens.push(quote === "'" ? decodeAnsiCEscapes(raw) : raw);
+			continue;
+		}
 
 		const quote = input[i] === "'" || input[i] === '"' ? input[i] : null;
 		if (quote) {
