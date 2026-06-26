@@ -10,6 +10,11 @@ export function GET() {
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>${site.url}/changelog</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>`;
 
 	return new Response(body, {

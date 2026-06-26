@@ -7,6 +7,7 @@
 	import SettingsDialog from '$lib/components/SettingsDialog.svelte';
 	import SeoHead from '$lib/components/SeoHead.svelte';
 	import { faq } from '$lib/seo/faq';
+	import { version } from '$lib/changelog';
 	import { loadConfig, saveConfig, type CleanerConfig } from '$lib/settings';
 	import { getResolvedTheme, toggleTheme } from '$lib/theme';
 
@@ -61,7 +62,10 @@
 	<header>
 		<div class="logo" aria-hidden="true">⌘</div>
 		<div class="header-text">
-			<h1>Curl Cleaner</h1>
+			<h1>
+				Curl Cleaner
+				<a href="/changelog" class="version" title="Changelog">v{version}</a>
+			</h1>
 			<p>Paste a curl command from Chrome DevTools. Get a minimal version you can share or paste into an agent.</p>
 		</div>
 		<div class="header-actions">
@@ -317,11 +321,33 @@
 	}
 
 	h1 {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
 		margin: 0 0 0.35rem;
 		font-size: 1.5rem;
 		font-weight: 600;
 		letter-spacing: -0.02em;
 		font-family: system-ui, -apple-system, sans-serif;
+	}
+
+	.version {
+		font-size: 0.6875rem;
+		font-weight: 500;
+		font-family: inherit;
+		color: var(--muted);
+		text-decoration: none;
+		padding: 0.15rem 0.45rem;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		letter-spacing: 0;
+		vertical-align: middle;
+	}
+
+	.version:hover {
+		color: var(--accent);
+		border-color: var(--accent);
 	}
 
 	header p {
