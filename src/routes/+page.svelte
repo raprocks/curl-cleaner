@@ -6,7 +6,9 @@
 	import { estimateTokens } from '$lib/estimate-tokens';
 	import SettingsDialog from '$lib/components/SettingsDialog.svelte';
 	import SeoHead from '$lib/components/SeoHead.svelte';
+	import SiteFooter from '$lib/components/SiteFooter.svelte';
 	import { faq } from '$lib/seo/faq';
+	import { howToSchema } from '$lib/seo/schema';
 	import { version } from '$lib/changelog';
 	import { loadConfig, saveConfig, type CleanerConfig } from '$lib/settings';
 	import { getResolvedTheme, toggleTheme } from '$lib/theme';
@@ -56,7 +58,22 @@
 	}
 </script>
 
-<SeoHead />
+<SeoHead
+	includeWebApp
+	includeOrganization
+	includeFaq
+	jsonLd={[
+		howToSchema(
+			'How to clean a curl command from Chrome DevTools',
+			'Remove browser headers from a DevTools curl command in three steps.',
+			[
+				'Open Chrome DevTools → Network, right-click a request, and choose Copy → Copy as cURL (bash).',
+				'Paste the command into the Raw curl panel on Curl Cleaner.',
+				'Copy the cleaned curl from the right — ready to share, replay, or paste into an agent.'
+			]
+		)
+	]}
+/>
 
 <main>
 	<header>
@@ -252,6 +269,8 @@
 			{/each}
 		</dl>
 	</section>
+
+	<SiteFooter />
 </main>
 
 <SettingsDialog
